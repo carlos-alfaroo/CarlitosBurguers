@@ -1,0 +1,98 @@
+/* --- General --- */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #fdf6e3;
+    color: #333;
+    margin: 0;
+    padding: 20px;
+}
+
+h1 {
+    text-align: center;
+    color: #d32f2f;
+    margin-bottom: 30px;
+}
+
+h2 {
+    color: #555;
+    margin-top: 30px;
+    margin-bottom: 10px;
+    border-bottom: 2px solid #d32f2f;
+    padding-bottom: 5px;
+}
+
+/* --- Formularios --- */
+form {
+    background-color: #fff3e0;
+    padding: 15px 20px;
+    margin-bottom: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+input[type="text"] {
+    padding: 6px 10px;
+    margin: 5px 0 10px 0;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    width: calc(100% - 22px);
+    box-sizing: border-box;
+}
+
+input[type="checkbox"] {
+    margin-left: 0;
+}
+
+button {
+    background-color: #d32f2f;
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+button:hover {
+    background-color: #b71c1c;
+}
+
+/* --- Listas --- */
+ul {
+    list-style-type: none;
+    padding-left: 0;
+}
+
+ul li {
+    background-color: #fff3e0;
+    margin: 5px 0;
+    padding: 8px 12px;
+    border-radius: 5px;
+    border-left: 4px solid #d32f2f;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+/* --- Colores según tipo --- */
+#pedidos-array li {
+    border-left-color: #1976d2;
+}
+
+#pedidos-urgentes li {
+    border-left-color: #d32f2f;
+}
+
+#reservas li {
+    border-left-color: #388e3c;
+}
+
+/* --- Links de acción --- */
+a {
+    text-decoration: none;
+    margin-left: 8px;
+    color: #555;
+    font-weight: bold;
+}
+
+a:hover {
+    color: #d32f2f;
+}

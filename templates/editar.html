@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Editar {{ tipo|default('Pedido') }}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='estilos.css') }}">
+</head>
+<body>
+    <h1>Editar {{ tipo|default('Pedido') }}</h1>
+    <form method="post">
+        Nombre cliente: <input type="text" name="nombre" value="{{ pedido.cliente }}" required><br>
+        Mesa: <input type="text" name="mesa" value="{{ pedido.mesa }}" required><br>
+        {% if tipo != 'reserva' %}
+        Plato: <input type="text" name="plato" value="{{ pedido.plato }}" required><br>
+        {% endif %}
+        <button type="submit">Guardar Cambios</button>
+    </form>
+</body>
+</html>
