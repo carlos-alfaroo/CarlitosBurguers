@@ -22,9 +22,72 @@ class ListaLigada:
         nodo = Nodo(pedido)
         nodo.siguiente = self.head
         self.head = nodo
+        
+    # Método para convertir la lista ligada en un array de python para poder mostrarlo en HTML
+    def obtener_lista(self):
+        elementos = []
+        actual = self.head
+        while actual:
+            elementos.append(actual.pedido)
+            actual = actual.siguiente
+        return elementos
 
 historial_pedidos = ListaLigada()
 
+
+# Árbol Binario de Búsqueda (BST)
+
+class NodoArbol:
+    def __init__(self, pedido):
+        self.pedido = pedido
+        self.izquierda = None 
+        self.derecha = None
+        
+class ArbolBinario:
+    def __init__(self):
+        self.raiz = None
+
+    def insertar(self, pedido):
+        if not self.raiz:
+            self.raiz = NodoArbol(pedido)
+        else:
+            self._insertar_recursivo(pedido, self.raiz)
+
+    def _insertar_recursivo(self, pedido, nodo_actual):
+        # Usamos el número de mesa para ordenar el árbol
+        # Intentamos convertir a int para ordenar numéricamente, si falla, usa string
+        try:
+            mesa_pedido = int(pedido['mesa'])
+            mesa_actual = int(nodo_actual.pedido['mesa'])
+        except ValueError:
+            mesa_pedido = str(pedido['mesa'])
+            mesa_actual = str(nodo_actual.pedido['mesa'])
+
+        if mesa_pedido < mesa_actual:
+            if nodo_actual.izquierda is None:
+                nodo_actual.izquierda = NodoArbol(pedido)
+            else:
+                self._insertar_recursivo(pedido, nodo_actual.izquierda)
+        else: # Mayor o igual va a la derecha
+            if nodo_actual.derecha is None:
+                nodo_actual.derecha = NodoArbol(pedido)
+            else:
+                self._insertar_recursivo(pedido, nodo_actual.derecha)
+
+    # Recorrido In-Order para obtener los pedidos ordenados por mesa
+    def obtener_ordenados(self):
+        elementos = []
+        self._in_order(self.raiz, elementos)
+        return elementos
+
+    def _in_order(self, nodo, elementos):
+        if nodo:
+            self._in_order(nodo.izquierda, elementos)
+            elementos.append(nodo.pedido)
+            self._in_order(nodo.derecha, elementos)
+            
+arbol_pedidos = ArbolBinario()      
+      
 # --- Pila y cola ---
 pila_urgentes = []
 cola_reservas = deque(maxlen=5)
@@ -41,9 +104,14 @@ def crear_pedido(nombre_cliente, mesa, plato):
 def registrar_pedido(nombre_cliente, mesa, plato, urgente=False):
     global indice
     pedido = crear_pedido(nombre_cliente, mesa, plato)
+    # Array Circular
     ordenes_array[indice] = pedido
     indice = (indice + 1) % MAX_ORDENES
+    # Lista Ligata (Historial)
     historial_pedidos.insertar(pedido)
+    # Arbol Binario (organizado por mesa)
+    arbol_pedidos.insertar(pedido)
+    # Pila (Urgentes)
     if urgente:
         pila_urgentes.append(pedido)
     return pedido
@@ -137,6 +205,7 @@ def eliminar_cola():
     if cola_reservas:
         cola_reservas.popleft()
     return redirect(url_for('index'))
+
 # --- Ruta principal ---
 @app.route('/', methods=['GET', 'POST'])
 def index():
@@ -154,11 +223,16 @@ def index():
             agregar_reserva(nombre, mesa)
 
         return redirect(url_for('index'))
+    
+    lista_historial = historial_pedidos.obtener_lista()
+    lista_arbol = arbol_pedidos.obtener_ordenados()
 
     return render_template('index.html',
                            ordenes_array=ordenes_array,
                            pila_urgentes=pila_urgentes,
-                           cola_reservas=list(cola_reservas))
+                           cola_reservas=list(cola_reservas),
+                           historial=lista_historial,
+                           pedidos_arbol=lista_arbol)
 
 
 # --- Bloque principal debe ir fuera de cualquier función ---

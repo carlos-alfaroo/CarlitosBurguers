@@ -1,68 +1,100 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Restaurante Flask</title>
+    <title>Restaurante Flask + Estructuras</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='estilos.css') }}">
 </head>
 <body>
-    <h1>Gestión de Restaurante</h1>
+    <h1>Gestión de Restaurante Avanzada</h1>
 
-    <h2>Registrar Pedido</h2>
-    <form method="post">
-        <input type="hidden" name="tipo" value="pedido">
-        Nombre cliente: <input type="text" name="nombre" required><br>
-        Mesa: <input type="text" name="mesa" required><br>
-        Plato: <input type="text" name="plato" required><br>
-        Urgente: <input type="checkbox" name="urgente"><br>
-        <button type="submit">Agregar Pedido</button>
+    <div class="container-formularios">
+        <div class="form-box">
+            <h2>Registrar Pedido</h2>
+            <form method="post">
+                <input type="hidden" name="tipo" value="pedido">
+                Nombre cliente: <input type="text" name="nombre" required><br>
+                Mesa: <input type="text" name="mesa" required><br>
+                Plato: <input type="text" name="plato" required><br>
+                Urgente: <input type="checkbox" name="urgente"> Marcar como urgente<br>
+                <button type="submit">Agregar Pedido</button>
+            </form>
+        </div>
+
+        <div class="form-box">
+            <h2>Agregar Reserva</h2>
+            <form method="post">
+                <input type="hidden" name="tipo" value="reserva">
+                Nombre cliente: <input type="text" name="nombre" required><br>
+                Mesa: <input type="text" name="mesa" required><br>
+                <button type="submit">Agregar Reserva</button>
+            </form>
+        </div>
+    </div>
+
+    <h2>Últimos Pedidos (Array Circular)</h2>
+    <form action="{{ url_for('eliminar_array') }}" method="get">
+        <button type="submit">Eliminar Último Pedido</button>
     </form>
+    <ul id="pedidos-array">
+        {% for pedido in ordenes_array %}
+            {% if pedido %}
+            <li>
+                {{ pedido.cliente }} - Mesa {{ pedido.mesa }} - {{ pedido.plato }}
+                <a href="{{ url_for('editar_pedido', pos=loop.index0) }}">Editar</a>
+            </li>
+            {% endif %}
+        {% endfor %}
+    </ul>
 
-    <h2>Agregar Reserva</h2>
-    <form method="post">
-        <input type="hidden" name="tipo" value="reserva">
-        Nombre cliente: <input type="text" name="nombre" required><br>
-        Mesa: <input type="text" name="mesa" required><br>
-        <button type="submit">Agregar Reserva</button>
+    <h2>Pedidos Urgentes (Pila / LIFO)</h2>
+    <form action="{{ url_for('eliminar_pila') }}" method="get">
+        <button type="submit">Eliminar Tope de Pila</button>
     </form>
-<h2>Últimos Pedidos (Array)</h2>
-<form action="{{ url_for('eliminar_array') }}" method="get">
-    <button type="submit">Eliminar Último Pedido</button>
-</form>
-<ul>
-    {% for pedido in ordenes_array %}
-        {% if pedido %}
-        <li>
-            {{ pedido.cliente }} - Mesa {{ pedido.mesa }} - {{ pedido.plato }}
-            <a href="{{ url_for('editar_pedido', pos=loop.index0) }}">Editar</a>
-        </li>
-        {% endif %}
-    {% endfor %}
-</ul>
+    <ul id="pedidos-urgentes">
+        {% for pedido in pila_urgentes %}
+            <li>
+                {{ pedido.cliente }} - Mesa {{ pedido.mesa }} - {{ pedido.plato }}
+                <a href="{{ url_for('editar_pedido_urgente', pos=loop.index0) }}">Editar</a>
+            </li>
+        {% endfor %}
+    </ul>
 
-<h2>Pedidos Urgentes (Pila)</h2>
-<form action="{{ url_for('eliminar_pila') }}" method="get">
-    <button type="submit">Eliminar Tope de Pila</button>
-</form>
-<ul>
-    {% for pedido in pila_urgentes %}
-        <li>
-            {{ pedido.cliente }} - Mesa {{ pedido.mesa }} - {{ pedido.plato }}
-            <a href="{{ url_for('editar_pedido_urgente', pos=loop.index0) }}">Editar</a>
-        </li>
-    {% endfor %}
-</ul>
+    <h2>Reservas Pendientes (Cola / FIFO)</h2>
+    <form action="{{ url_for('eliminar_cola') }}" method="get">
+        <button type="submit">Eliminar Primer Reserva</button>
+    </form>
+    <ul id="reservas">
+        {% for reserva in cola_reservas %}
+            <li>
+                {{ reserva.cliente }} - Mesa {{ reserva.mesa }}
+                <a href="{{ url_for('editar_reserva', pos=loop.index0) }}">Editar</a>
+            </li>
+        {% endfor %}
+    </ul>
 
-<h2>Reservas Pendientes (Cola)</h2>
-<form action="{{ url_for('eliminar_cola') }}" method="get">
-    <button type="submit">Eliminar Primer Reserva</button>
-</form>
-<ul>
-    {% for reserva in cola_reservas %}
-        <li>
-            {{ reserva.cliente }} - Mesa {{ reserva.mesa }}
-            <a href="{{ url_for('editar_reserva', pos=loop.index0) }}">Editar</a>
-        </li>
-    {% endfor %}
-</ul>
+    <hr>
+
+    <h2 class="titulo-arbol">Pedidos Ordenados por Mesa (Árbol Binario)</h2>
+    <p><em>Esta lista se genera recorriendo el árbol "In-Order". Se ordenan automáticamente por número de mesa.</em></p>
+    <ul id="pedidos-arbol">
+        {% for pedido in pedidos_arbol %}
+            <li>
+                <strong>Mesa {{ pedido.mesa }}</strong> - {{ pedido.cliente }} ({{ pedido.plato }})
+            </li>
+        {% else %}
+            <li>No hay pedidos en el árbol.</li>
+        {% endfor %}
+    </ul>
+
+    <h2 class="titulo-historial">Historial Completo (Lista Ligada)</h2>
+    <p><em>Registro histórico insertado nodo por nodo.</em></p>
+    <ul id="historial-lista">
+        {% for pedido in historial %}
+            <li>
+                {{ pedido.cliente }} pidió {{ pedido.plato }} en Mesa {{ pedido.mesa }}
+            </li>
+        {% endfor %}
+    </ul>
+
 </body>
 </html>

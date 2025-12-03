@@ -5,6 +5,8 @@ body {
     color: #333;
     margin: 0;
     padding: 20px;
+    max-width: 800px;
+    margin: 0 auto;
 }
 
 h1 {
@@ -15,13 +17,28 @@ h1 {
 
 h2 {
     color: #555;
-    margin-top: 30px;
+    margin-top: 40px;
     margin-bottom: 10px;
     border-bottom: 2px solid #d32f2f;
     padding-bottom: 5px;
 }
 
+/* Clases especificas para los titulos nuevos */
+.titulo-arbol { border-bottom-color: #ff9800; }
+.titulo-historial { border-bottom-color: #9c27b0; }
+
 /* --- Formularios --- */
+.container-formularios {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.form-box {
+    flex: 1;
+    min-width: 300px;
+}
+
 form {
     background-color: #fff3e0;
     padding: 15px 20px;
@@ -39,10 +56,6 @@ input[type="text"] {
     box-sizing: border-box;
 }
 
-input[type="checkbox"] {
-    margin-left: 0;
-}
-
 button {
     background-color: #d32f2f;
     color: white;
@@ -53,9 +66,7 @@ button {
     font-size: 14px;
 }
 
-button:hover {
-    background-color: #b71c1c;
-}
+button:hover { background-color: #b71c1c; }
 
 /* --- Listas --- */
 ul {
@@ -64,35 +75,37 @@ ul {
 }
 
 ul li {
-    background-color: #fff3e0;
+    background-color: #fff;
     margin: 5px 0;
     padding: 8px 12px;
     border-radius: 5px;
-    border-left: 4px solid #d32f2f;
+    border-left: 5px solid #ccc; /* Color por defecto */
     box-shadow: 0 1px 3px rgba(0,0,0,0.1);
 }
 
-/* --- Colores según tipo --- */
-#pedidos-array li {
-    border-left-color: #1976d2;
+/* Colores para Array, Pila y Cola */
+#pedidos-array li { border-left-color: #1976d2; background-color: #e3f2fd; }
+#pedidos-urgentes li { border-left-color: #d32f2f; background-color: #ffebee; }
+#reservas li { border-left-color: #388e3c; background-color: #e8f5e9; }
+
+
+#pedidos-arbol li { 
+    border-left-color: #ff9800; /* Naranja para Arbol */
+    background-color: #fff3e0;
 }
 
-#pedidos-urgentes li {
-    border-left-color: #d32f2f;
+#historial-lista li { 
+    border-left-color: #9c27b0; /* Morado para Lista Ligada */
+    background-color: #f3e5f5;
+    opacity: 0.9;
 }
 
-#reservas li {
-    border-left-color: #388e3c;
-}
-
-/* --- Links de acción --- */
 a {
     text-decoration: none;
     margin-left: 8px;
     color: #555;
     font-weight: bold;
+    font-size: 0.9em;
 }
 
-a:hover {
-    color: #d32f2f;
-}
+a:hover { color: #d32f2f; }
